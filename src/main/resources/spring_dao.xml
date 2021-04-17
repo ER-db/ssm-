@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans.xsd
+   http://www.springframework.org/schema/context
+   http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--【①】数据源，连接数据库-->
+    <!-- 引入properties配置文件-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbc.driverClassName}"></property>
+        <property name="Url" value="${jdbc.Url}"></property>
+        <property name="username" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+    </bean>
+
+    <!--【②】配置sqlSession的工厂-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!--添加别名-->
+        <property name="typeAliasesPackage" value="com.itheima.pojo"/>
+    </bean>                                 <!--  👆 ☝ ☝ ☝ ☝ ☝ ☝ ☝ 👆   这里输入要扫描的pojo包-->
+
+
+    <!--加载mybatis的dao映射配置，让spring管理mybatis的dao，相当于在dao接口上添加@Repository-->
+    <!--【③】配置扫描dao的包，让dao层的接口被spring管理-->
+    <bean id="mapperScannerConfiggurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="    com.itheima.dao      "/>
+    </bean>                                    <!--  ☝  ↑  ☝  ↑ 👆  ↑  👆这里输入要扫描的dao包-->
+
+
+</beans>
+
+
+
